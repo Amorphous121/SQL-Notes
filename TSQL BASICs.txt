@@ -1,0 +1,269 @@
+=============================================================================
+||					MSSQL Server T-SQL Basic Query Collection						||
+=============================================================================
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+#20. T-SQL Variables  
+--------------------------------------------------------------------------------------------------------------------------------------------
+ 1. Variables are used to store temporary values in TSQL
+ 2. Variables are declared with DECLARE command followed by variable name preceded with @symbol and datatype.
+ 3. By default value of declared variable is NULL.
+
+ Syntax: 
+ --------
+   DECLARE @variable_name datatype(size);
+
+ Example:
+ --------
+   - DECLARE @name VARCHAR(20);
+   - DECLARE @address INT(50), @age INT;
+
+
+ 4. Assign Value to A Variable
+   a. Both SET and SELECT command can assign value to variable.
+   b. SET can only assign one variable value at a time.
+   c. SELECT command retrive data from tables and assign multiple variable values with a single statement.
+
+   e.g 
+      Syntax   :  SET @variable_name = value;
+               :  SELECT @variable_name = value, @variable_name = value;
+
+      Example  :  SET @salary = 25000;
+                  SELECT @name = 'Prathamesh', @age = 25
+
+5. Incrementing and Decrementing Variable values.
+   SET @age += 5;
+   SET @age = @age + 1;
+
+
+6. Set variables values from query.
+   DECLARE @list_price DECIMAL(10,5), @product_name VARCHAR(100);
+   SELECT @list_price = p.ListPrice, @product_name = p.Name from [SalesLT].[Product] p;
+   SELECT @product_name as 'Product Name', @list_price as 'Product List price';
+
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+#21. T-SQL Scripts and Batch
+--------------------------------------------------------------------------------------------------------------------------------------------
+ 1. SQL Scripts are nothing but the file having sql commands in it in form of batches.
+ 2. A batch of SQL statements is a group of two or more SQL statements or a single SQL statement.
+ 
+ 3. A Batch of SQL statements can have
+   a. DDL statements
+   b. DML statements
+   c. DCL statements
+
+
+ 4. Types of Batches
+   a. Explicite Batch
+      An Explicite batch is two or more sql statements seperated by semicolons.
+
+      e.g 
+         insert into employee_info(emp_name, emp_salary) values('Brad', 4500);
+         insert into employee_info(emp_name, emp_salary) values('Pit', 4000);
+ 
+ 
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+#22. GO Statement  
+--------------------------------------------------------------------------------------------------------------------------------------------
+ 
+ 1. GO is not a T-SQL statement; it is a command recognized by SQL Server Utilities.
+ 2. GO command can be executed by any user. It requires no permission.
+ 3. It signals the end of a batch to SQL server utilities.
+
+ Syntax: 
+ --------
+   GO [count];
+
+   Where, count is a Positive integer, The Batch will execute the specified number of times.
+
+ Example:
+ --------
+
+   DECLARE @name VARCHAR(20);
+   DECLARE @address INT(50), @age INT;
+   SET @age += 5;
+   SET @age = @age + 1;
+   GO
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+#23. T-SQL Control Flow Keywords  
+--------------------------------------------------------------------------------------------------------------------------------------------
+ 
+ T-SQL statements are executed in sequential manner.
+
+   1. BEGIN...END
+   2. IF...ELSE 
+   3. WHILE
+   4. BREAK
+   5. CONTINUE 
+   6. GOTO
+   7. RETURN
+   8. TRY..CATCH
+   9. THROW
+   10. WAITFOR
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+#24. T-SQL BEGIN...END  
+--------------------------------------------------------------------------------------------------------------------------------------------
+ 
+  1. The Begin...end Keywords are used to group multiple lines into one statement block.
+  2. In Addition, Begin...end can be nested
+
+ Syntax: 
+ --------
+   BEGIN
+      { SQL statements for Statement block }
+   END
+
+ Example:
+ --------
+   BEGIN
+      DECLARE @list_price DECIMAL(10,5), @product_name VARCHAR(100), @product_id INT = 680;
+      SELECT @list_price = p.ListPrice, @product_name = p.ProductNumber, @product_id = p.ProductID from SalesLT.Product p WHERE ProductID = @product_id;
+      SELECT @list_price 'List Price', @product_id 'Product Id', @product_name 'Product Name';
+
+      BEGIN
+         PRINT 'Product Id: ' + @product_name;
+      END
+   END
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+#25. T-SQL IF...ELSE  
+--------------------------------------------------------------------------------------------------------------------------------------------
+ 
+ Syntax: 
+ --------
+   IF condition
+      BEGIN
+         { SQL statements for Statement block }
+      END
+   ELSE
+      BEGIN
+         { SQL statements for Statement block }
+      END
+
+ Example:
+ --------
+
+   
+BEGIN
+    DECLARE @price INT;
+    SELECT @price = AVG(p.ListPrice) from SalesLT.Product p;
+    SELECT @price
+
+    IF @price > 1000 
+        BEGIN
+            PRINT 'Average Salary is Greater than 100';
+        END
+    ELSE
+        BEGIN
+            PRINT 'Average Salary is Less than 100';
+        END
+END
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+#26. T-SQL While Loop  
+--------------------------------------------------------------------------------------------------------------------------------------------
+ 
+
+ Syntax: 
+ --------
+   WHILE
+      BEGIN
+         { SQL statements for Statement block }
+      END
+
+
+ Example:
+ --------
+   BEGIN
+      WHILE (select MIN(ListPrice) from SalesLT.Product) < 50
+         BEGIN
+            UPDATE SalesLT.Product SET ListPrice = ListPrice + 10;
+            PRINT 'Price Updated!';
+            if (SELECT MIN(ListPrice) from SalesLT.Product) >= 50 
+               BEGIN
+                  PRINT 'Min Price in now updated to more than 50';
+                  BREAK;
+               END
+         END
+   END
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+#27. T-SQL TRY...CATCH
+--------------------------------------------------------------------------------------------------------------------------------------------
+ 
+ TRY...CATCH implements error handling in T-SQL
+
+ To retrive the information about the error;
+   ERROR_MESSAGE() returns the complete text of generated error message;
+   ERROR_NUMBER() returns the number of the error;
+   ERROR_LINE() returns the line number inside the routine that caused the error.
+   ERROR_PROCEDURE() returns the name of the stored procedure or trigger where the error occured.
+   ERROR_STATE() returnes the error state number.                                                                                                                                                   
+   ERROR_SEVERITY() returns the severity.
+
+
+ Syntax: 
+ --------
+
+   BEGIN TRY
+         { SQL statements for Statement block }
+   END TRY
+
+   BEGIN CATCH
+         { SQL statements for Statement block }
+   END CATCH
+
+ Example:
+ --------
+
+   BEGIN TRY
+      SELECT 100/0 AS 'DIVISION';
+   END TRY
+   BEGIN CATCH
+      SELECT ERROR_MESSAGE() AS 'ERROR MESSAGE';
+   END CATCH
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+#. T-SQL WaitFor  
+--------------------------------------------------------------------------------------------------------------------------------------------
+ 
+
+ Syntax: 
+ --------
+   BEGIN
+      WAITFOR TIME 'time_to_execute'
+      { SQL statements or statement Block }
+   END
+
+   where, time_to_execute can be specified either in a datetime date format, or as a local variable.
+
+ Example:
+ --------
+   BEGIN
+      WAITFOR TIME '00:00:10'
+      select * from employees
+   END
+
+   BEGIN
+      WAITFOR DELAY '00:00:02';
+      select * from learning.dbo.employees;
+   END
+
+

@@ -1,0 +1,123 @@
+=============================================================================
+||					MSSQL Server JOIN Query Collection						||
+=============================================================================
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+#18. Joins
+--------------------------------------------------------------------------------------------------------------------------------------------
+ 
+ 1. Used to retrive data from multiple table
+ 2. Types
+    a. Inner Join
+    b. Outer Join
+        i.   Left Outer Join
+        ii.  Right Outer Join
+        iii. Full Outer Join
+    c. Cross Join
+
+
+-----------------
+|| Inner Join  ||
+-----------------
+
+    a. Inner join returns all the rows from multiple tables where join condition is satisfied.
+
+         Syntax: 
+         --------
+
+            SELECT column_name(s) FROM table1_name INNER JOIN table2_name
+            ON table1_name.column_name = table2_name.column_name;
+
+
+         Example:
+         --------
+
+            SELECT e.first_name, d.department_name from dbo.employees e INNER JOIN dbo.departments d
+            ON e.department_id = d.department_id;
+
+            P) Join Three Tables.
+            -----------------------
+
+                Right OuterCT a.first_name, fi.title FROM actor a 
+                INNER JOIN film_actor f ON a.actor_id = f.actor_id 
+                INNER JOIN film fi ON f.film_id = fi.film_id LIMIT 100
+            
+
+            Q) Self Join
+            --------------
+
+                select 
+                    e.employee_id as "Employee Id", 
+                    e.manager_id as "Employee Manager Id",
+                    e.first_name as "Employee Name", 
+                    m.first_name as "Manager Id", 
+                    m.employee_id as "Manager Employee Id"  
+                from dbo.employees e
+                join dbo.employees m
+                on e.manager_id = m.employee_id;
+
+
+
+----------------------
+|| Left Outer Join  ||
+----------------------
+
+    a. Returns all the rows from the left-hand table and records in the right-hand table with matching values.
+
+         Syntax: 
+         --------
+
+            SELECT column_name(s) FROM table1_name LEFT OUTER JOIN table2_name
+            ON table1_name.column_name = table2_name.column_name;
+
+
+         Example:
+         --------
+
+            SELECT e.first_name, d.department_name from dbo.employees e LEFT OUTER JOIN dbo.departments d
+            ON e.department_id = d.department_id;
+
+
+
+-----------------------
+|| Right Outer Join  ||
+-----------------------
+    
+    a. Returns all rows from right-hand table and records in left-hand table with matching value.
+
+         Syntax: 
+         --------
+
+            SELECT column_name(s) FROM table1_name RIGHT OUTER JOIN table2_name
+            ON table1_name.column_name = table2_name.column_name;
+
+
+         Example:
+         --------
+
+            SELECT e.first_name, d.department_name from dbo.employees e RIGHT OUTER JOIN dbo.departments d
+            ON e.department_id = d.department_id;
+
+
+
+-----------------------
+|| Full Outer Join  ||
+-----------------------
+    
+
+    a. Returns all rows from right-hand table and left-hand table.
+
+         Syntax: 
+         --------
+
+            SELECT column_name(s) FROM table1_name FULL OUTER JOIN table2_name
+            ON table1_name.column_name = table2_name.column_name;
+
+
+         Example:
+         --------
+
+            SELECT e.first_name, d.department_name from dbo.employees e FULL OUTER JOIN dbo.departments d
+            ON e.department_id = d.department_id;
+
+

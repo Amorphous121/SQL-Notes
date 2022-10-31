@@ -1,0 +1,141 @@
+=============================================================================
+||					MSSQL Server USER DEFINED FUNCTION Query Collection						||
+=============================================================================
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+#. User Defined Functions  
+--------------------------------------------------------------------------------------------------------------------------------------------
+   
+ UDFs are routines that accept parameters, perform an action (complex calculation), and return result of that
+ action as value. The return value can either be a single value or a result set.
+
+ Why UDFs
+   - Moduler Programming
+   - Faster Execution
+   - Reduce network traffic
+
+Types of Functions
+   - System Functions
+   - Scaler Functions
+      = Scaler function returns a single data value of the type defined in thr RETURNS Clause.
+   - Table Valued Function
+      = It returns table datatype values.
+
+
+-----------------------
+|| Scaler Functions  ||
+-----------------------
+
+   1. Will always return some value.
+   2. UserDefined functions have onlyinput parameters for it.
+   3. They can't return multiple result set.
+   4. It doesn't support Error handling
+   5. SET statements are not allowed.
+   6. UDF can't call stored procedure.
+   7. UDF's can be nested upto 32 levels.
+
+    
+   Syntax: 
+   --------
+      CREATE FUNCTION function_name(parameter datatypes, ...)
+      RETURNS return_datatype
+      [ WITH <function_group> [,...n] ]
+      [ AS ]
+      BEGIN
+         function body
+         return scaler_expression
+      END
+
+   
+   Example: Create a function to get employee salary by passing employee name
+   --------
+
+      CREATE FUNCTION get_emp_salary(@name AS VARCHAR(50))
+      RETURNS DECIMAL
+      BEGIN
+         DECLARE @salary DECIMAL;
+
+         SELECT @salary = e.salary from dbo.employees e
+         WHERE e.first_name = @name;
+         
+         RETURN @salary;
+      END;
+      go
+
+   Execute:
+   --------
+      select dbo.get_emp_salary('Lex');
+
+
+-----------------------
+|| Table Valued Functions  ||
+-----------------------
+   1. User defined table valued functions always returns table data type.
+   2. A table valued function accepts zero or more parameters.
+
+
+   Types.
+      1. Inline Table-valued Function
+      ----------------------------------   
+         
+         a. There is no function body (i.e There is no need of BEGIN..END BLOCK)
+         b. The table is a single result set of SELECT statement.
+
+         Syntax:
+         --------
+
+            CREATE FUNCTION function_name(parameter datatype) RETURNS return_datatype
+            AS
+            RETURN statement
+
+
+         Example: Create a function to get employee information by passing employee salary
+         ---------
+
+            CREATE FUNCTION get_emp_datails_by_salary(@salary DECIMAL)
+            RETURNS TABLE
+            AS
+            RETURN SELECT * FROM employees WHERE salary = @salary;
+
+         Execute:
+         ----------            
+            select * from dbo.get_emp_datails_by_salary(17000);
+
+      
+      2. Multi-statement table valued function
+      ------------------------------------------
+
+         a. It contains multiple SQL statements enclosed in BEGIN...END blocks.
+         b. The return value is declared as a table variable. the RETURN statement is without a value
+            and the declared table variable is returned.
+
+
+         Syntax:
+         --------
+
+            CREATE FUNCTION function_name(parameter datatype, ...)
+            RETURNS @table_variable TABLE (column1 datatype, column2 datatype, ...)
+            AS
+            BEGIN
+               SQL Statement(s)
+               RETURN
+            END
+
+
+         Example: Create a function to get list of employees by passing department Id
+         ---------
+
+            CREATE FUNCTION get_dept_employees(@department_id AS INT) RETURNS @table_variable TABLE
+            (employee_id INT, first_name VARCHAR(50), department_id INT)
+            AS
+            BEGIN
+               INSERT INTO @table_variable
+               select e.employee_id, e.first_name, e.department_id from employees e where e.department_id = @department_id
+               RETURN
+            END
+
+         
+         Execute:
+         --------
+
+         select * from dbo.get_dept_employees(10);

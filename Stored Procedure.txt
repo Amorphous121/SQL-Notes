@@ -1,0 +1,137 @@
+=============================================================================
+||					MSSQL Server Stored Procedure Query Collection						||
+=============================================================================
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+#. Stored Procedure  
+--------------------------------------------------------------------------------------------------------------------------------------------
+ 
+ 1. Stored procedure is a group of one or more T-SQL statements
+ 2. It can be stored in database.
+ 3. Stored Procedure
+   a. Accept input parameters and return multiple values.
+   b. Contains programming statements that perform operations in database.
+   c. Returns a status value to a calling program to indicate success or failuer.
+
+ Benefits:
+   a. Reuse of code
+   b. Easy to maintain
+   c. Imperove performance
+   d. Strong Security
+   d. Reduce server/client network traffic
+
+
+ Types of Stored Procedures
+
+   1. System
+      a. Physically stored in the internal Resource database. 
+
+   2. User Defined
+      a. It can be created in user defined databases or in all system databases except Resource Database
+   
+   3. Temporary 
+      a. A form of user defined procedures. The temporary procedures are like a permanent procedure, except temporary procedures are stored in tempdb.
+
+
+
+------------------------------
+|| CREATE STORED PROCEDURE  ||
+------------------------------
+   1. Stored Procedure Without Parameter. ( Simple Stored Procedure )
+
+      Syntax: 
+      --------
+
+         CREATE PROCEDURE procedure_name
+         AS
+         BEGIN
+            { SQL Statement or Statement Block }
+         END
+
+
+      Example:
+      --------
+
+         CREATE PROCEDURE proc_allEmployeesDetails
+         AS
+         BEGIN
+            SELECT * FROM learning.dbo.employees;
+         END
+
+      Execute:
+      --------
+         EXEC proc_allEmployeesDetails;
+
+
+   2. Stored Procedure With Parameter.
+      
+      Syntax: 
+      --------
+
+         CREATE PROCEDURE procedure_name(@parameter_list)
+         AS
+         BEGIN
+            { SQL Statement or Statement Block }
+         END
+
+
+      Example:
+      --------
+         CREATE PROCEDURE proc_getEmployeesOf(@department_name varchar(50))
+         AS
+         BEGIN
+            select * from [learning].[dbo].[employees] e
+            join [learning].[dbo].[departments] d
+            on e.department_id = d.department_id
+            where department_name = @department_name
+         END
+         GO
+
+      Execute:
+      --------
+         EXEC proc_getEmployeesOf @department_name = "Executive";
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+#. Alter Stored Procedure  
+--------------------------------------------------------------------------------------------------------------------------------------------
+ 
+ Alter Procedure used to redefine or modify the existing stored procedure.
+
+ Syntax: 
+ --------
+   ALTER PROCEDURE procedure_name 
+   AS
+   BEGIN
+      { SQL Statement or Statement Block }
+   END
+
+ Example:
+ --------
+   
+   ALTER PROCEDURE proc_allEmployeesDetails
+   (@salary DECIMAL(10,2))
+   AS
+   BEGIN
+      select * from dbo.employees e where e.salary = @salary;
+   END
+   GO
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+#. Rename a Stored Procedure  
+--------------------------------------------------------------------------------------------------------------------------------------------
+ 1. To rename existing stored procedure we need to use system procedure.
+ 
+ Syntax: 
+ --------
+   EXEC sp_rename @objname = 'old name', @newname = 'new name';
+   go
+
+ Example:
+ --------
+   
+   EXEC sp_rename @objname = 'proc_allEmployeesDetails', @newname = 'proc_getEmployeesBySalary';
+   go
+
+

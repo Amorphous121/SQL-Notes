@@ -1,0 +1,397 @@
+=============================================================================
+||					MSSQL Server Basic Query Collection						||
+=============================================================================
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+#1. Create Table [ DDL STATEMENT ]
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+ Syntax: 
+ --------
+
+ create table table_name(
+    column_name datatype constraints,
+    column_name datatype constraints,
+    column_name datatype constraints,
+ );
+
+
+ Example:
+ --------
+
+ CREATE TABLE employee_info (
+ 	emp_id INTEGER PRIMARY KEY,
+ 	emp_name VARCHAR(20) NOT NULL,
+ 	emp_salary DECIMAL(10,2) NOT NULL,
+ 	dept_id INTEGER,
+ 	FOREIGN KEY(dept_id) REFERENCES department(dept_id)
+ );
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+#2. Insert Record 
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+ Syntax: 
+ --------
+
+ INSERT INTO table_name([..column_name]) VALUES (column values);
+
+ Example:
+ --------
+ INSERT INTO employee_info VALUES('Prathaemsh', 40000, 1);
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+#3. Select Statement [ DML STATEMENT ]
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+ Syntax: 
+ --------
+
+ SELECT */[column_name][function_name] FROM table_name
+ [ WHERE condition]
+ [ GROUP BY condition ]
+ [ HAVING condition ]
+ [ ORDER BY column_name ];
+
+
+ Example:
+ --------
+
+ SELECT * FROM employee_info;
+
+ SELECT * FROM employee_info
+ WHERE dept_id = 1
+ ORDER BY emp_name DESC;
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+#4. Update Records [ DML STATEMENT ]
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+ Syntax: 
+ --------
+
+ UPDATE table_name
+ SET column_name = column_value
+ [ WHERE condition ];
+
+
+ Example:
+ --------
+
+ UPDATE employee_info
+ SET emp_salary = 5000
+ WHERE emp_salary IS NULL;
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+#5. Delete Statement [ DML STATEMENT ]
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+ Syntax: 
+ --------
+ 
+ DELETE FROM table_name
+ [ WHERE condition ];
+
+
+ Example:
+ --------
+
+ DELETE FROM employee_info
+ WHERE emp_id = 10;
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+#6. Order By Clause [ DML STATEMENT ]
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+ Syntax: 
+ --------
+ 
+ SELECT column_name(s) FROM table_name
+ ORDER BY column_name [ DESC ];
+
+ Example:
+ --------
+
+ SELECT * FROM employee_info
+ ORDER BY emp_name DESC; 
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+#7. Aggregate Functions Or Group Functions
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+ Syntax: 
+ --------
+ 
+ SELECT SUM/MIN/MAX/AVG/COUNT(column_name) FROM table_name;
+
+
+ Example:
+ --------
+
+ SELECT MAX(emp_salary) FROM employee_info;
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+#8. Numeric Functions 
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+ Syntax: 
+ --------
+ 
+ ABS(number)        - Returns Absolute value.
+ CEILING(number)    - Returns Ceil Value of a number.
+ FLOOR(number)      - Returns Floor value of a number.
+ SIGN(number)       - Returns 1 -> Positive, -1 -> Negative, 0 from 0.
+ SQUARE(number)     - Returns the square of a number.
+ SQRT(number)       - Returns the square root of a number.
+ PI(number)         - Returns the PI value.
+ EXP(number)        - Returns the exponential value of a number.
+ COS(number)
+ SIN(number)
+ TAN(number)
+
+ Example:
+ --------
+
+ SELECT ABS(-10)
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+#9. String Functions 
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+ Syntax: 
+ --------
+   
+ LEN(string/column_name)        - Returns the length of string.
+ UPPER(string/column_name)      - Returns the uppercase value of string.
+ LOWER(string/column_name)      - Returns the lowercase value of string.
+ LTRIM(string/column_name)      - Returns the left trimmed value of string.
+ RTRIM(string/column_name)      - Returns the Right trimmed value of string.
+ TRIM(string/column_name)       - Returns the trimmed value of string from both side.
+ SUBSTRING(string/column_name, start_position, length)  - Returns the substring.
+ REPLACE(string/column_name, search_expression, replacement_expression) - Returns the replaced string; 
+ REPLICATE(string/column_name, count_of_repeatation) - returns the repeated string.
+
+
+ Example:
+ --------
+
+ SELECT REPLACE("Microsoft", "Micro", "Major")  -> Majorsoft
+ SELECT REPLICATE("DUMMY", 2)                   -> DUMMYDUMMY
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+#10. Boolean Operators  
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+ Syntax: 
+ --------
+ 
+ SELECT * FROM table_name
+ [ WHERE 
+     condition1 AND condition2 ]
+
+
+ 
+ SELECT * FROM table_name
+ [ WHERE 
+     condition1 OR condition2 ]
+
+
+
+ SELECT * FROM table_name
+ [ WHERE expression <>/!= value ]
+
+ Example:
+ --------
+
+ SELECT * FROM login_info 
+ where session_active != true;
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+#11. Date and Time Functions 
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+ Functions: 
+ ----------
+
+ 1.  GETDATE(), SYSDATETIME() - Returns the current timestamp.
+ 2.  SYSDATETIME() - Returns the current timestamp.
+ 3.  DATENAME() - Returns the Date info like month, year from given date.
+ 4.  DATEDIFF() - 
+ 5.  DATEADD() - 
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+#12. Group By Clause 
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+ - Defines one or more columns as a group such that all rows within any group have the same values for those columns.
+ - Always used with select statement.
+
+ Syntax: 
+ --------
+ 
+ SELECT column_name(s), aggregate_function() FROM table_name
+ [ WHERE condition]
+ [ GROUP BY condition ]
+ [ HAVING condition ];
+
+
+ Example:
+ --------
+
+ Finding Department wise salary sum, avg and count of salaried persons.
+
+ SALARY salary, AVG(salary) AS 'Average Salary', COUNT(salary) FROM employees GROUP BY salary ORDER BY salary DESC;
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+#13. Having Clause 
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+ 1. The HAVING clause defines the condition that is then applied to group of rows.
+ 2. Always used with SELECT statement inside GROUP BY clause.
+
+ Syntax: 
+ --------
+ 
+ SELECT column_name(s), aggregate_function()
+ FROM table_name
+ GROUP BY column_name
+ [HAVING condition]
+
+
+ Example:
+ --------
+ 
+ Find sum of salary of employees of dept 20
+
+ SELECT dept_id, SUM(emp_salary) AS 'Total Salary' FROM employee_info
+ GROUP BY dept_id
+ HAVING dept_id = 20;
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+#14. Top Clause 
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+ 1. The Top clause specificies the first n rows of the query results that are to be retrived.
+ 2. This should be used with order by clause.
+
+ Syntax: 
+ --------
+ 
+ SELECT TOP no_of_records column_name(s) FROM table_name ORDER BY column_name [ DESC ];
+
+
+ Example:
+ --------
+
+ SELECT TOP 5 * FROM dbo.employees e INNER JOIN dbo.departments d ON e.department_id = d.department_id ORDER BY e.first_name;
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+#15. Create a copy of the table from different database. 
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+ 1. To create a copy of the table from different database.
+
+ SELECT column_name(s)/* INTO table_name FROM database_name.table_name;
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+#16. Alter Statement [ DDL Statement ] 
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+ 1. Modifies a table definition by adding, altering, or dropping columns and constraints
+ 2. It also reassigns and rebuilds partitions, or disables and enables constraints and triggers.
+
+ 
+ a. Adding a new column that allows null values
+    ---------------------------------------------
+    Syntax  - ALTER TABLE table_name ADD column_name datatype(size) [null], ...;
+    Example - ALTER TABLE employee_info ADD phone varchar(10) null;
+
+
+ b. Adding a new column with constraints
+    --------------------------------------------
+
+    Syntax  - ALTER TABLE table_name ADD column_name datatype(size) constraint [null], ...;
+    Example - ALTER TABLE employee_info ADD phone varchar(10) unique null;
+    
+
+ c. Dropping a column
+    ---------------------------------------------
+
+    Syntax  - ALTER TABLE table_name DROP COLUMN column_name(s);
+    Example - ALTER TABLE employee_info DROP COLUMN phone;
+
+
+ d. Dropping constraints and columns
+    ---------------------------------------------
+
+    Syntax  - ALTER TABLE table_name DROP CONSTRAINT constraint_name;
+            - ALTER TABLE employee_info CONSTRAINT constraint_name, COLUMN column_name;
+
+
+ e. Altering Column Definitions, Changing Datatype and sizes
+    --------------------------------------------------------
+    Syntax - ALTER TABLE table_name ALTER COLUMN column_name datatype(size);
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+#17. Aliases  
+--------------------------------------------------------------------------------------------------------------------------------------------
+ 
+ 1. Can be used to create a temporary name for columns or table.
+ 2. Type of Aliases
+    a. Column Aliases - Are used to make column headings in query output easier to read;
+    b. Table Aliases  - Are used to shorten your SQL to make it easier to read. ( Specially in join and subqueries )
+ 
+
+ Syntax: 
+ --------
+    a. SELECT emp_name AS "Employee Name" FROM employee_info;
+    B. SELECT e.emp_name FROM employee_info e;
+
+
+ Example:
+ --------
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+#19. SubQuery  
+--------------------------------------------------------------------------------------------------------------------------------------------
+ 
+ 1. A Query within another sql query and embedded within where clause is called subquery.
+ 2. SubQuery must be enclosed within paranthesis ().
+ 3. SubQueries can be used with SELECT, UPDATE, DELETE and INSERT statements along with comparison operators.
+ 4. A SubQuery Can have only one column in select statement
+
+ Syntax: 
+ --------
+
+    SELECT column_name FROM table_name
+    WHERE column_name OPERATOR
+        (SELECT column_name FROM table_name [ WHERE condition ]); 
+
+
+ Example:
+ --------
+   SELECT * from employees WHERE salary > ( SELECT Salary from employee where employee_id = 10 );
+
