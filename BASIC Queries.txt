@@ -395,3 +395,4 @@
  --------
    SELECT * from employees WHERE salary > ( SELECT Salary from employee where employee_id = 10 );
 
+   SELECT * FROM employees where (department_id, first_name) in 

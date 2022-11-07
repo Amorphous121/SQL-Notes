@@ -27,7 +27,7 @@ Types of Functions
 -----------------------
 
    1. Will always return some value.
-   2. UserDefined functions have onlyinput parameters for it.
+   2. UserDefined functions have only input parameters for it.
    3. They can't return multiple result set.
    4. It doesn't support Error handling
    5. SET statements are not allowed.

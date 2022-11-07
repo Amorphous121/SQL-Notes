@@ -1,0 +1,74 @@
+=============================================================================
+||					MSSQL Server Triggers Query Collection  				||
+=============================================================================
+
+    1. Trigger is a type of stored Procedure, that automatically runs when an event occures in Database server.
+    2. Events are DML operations (INSERT, UPDATE, DELETE)
+
+    Types Of Triggers
+
+        1. DDL Trigger
+            -   DDL Trigger is fired when DDL statements like, DROP, CREATE, ALTER TABLE occures. 
+                DDL triggers are always after trigger.
+
+        2. DML Trigger
+            -   These Triggers are created on DML statements like (INSERT, UPDATE, DELETE) and stored Procedures.
+                DML Triggers are of type 3
+                    -   After Trigger
+                    -   INSTEAD OF Triggers
+                        - These triggers overrides the standerd actions of the triggering statement.
+                        - These can be used to perform Error or value chacking on one or more columns.
+                        - These trigger performs additional actions before insert, delete, update
+                    CLR Trigger (Common Language Runtime) Trigger
+                        - It can be either an AFTER or INSTEAD OF Trigger
+                        - It can also 
+
+
+
+-----------------------
+||  Create Trigger   ||
+-----------------------
+
+    Magic Table:
+        SQL Server automatically creates and manage tables. DML trigger statements use to magic tables.
+
+        1. Inserted Table
+            -   This table stores copies of the affected rows during INSERT and UPDATE statements. During these 
+                transactions, new rows are added to both inserted table and the trigger table.
+    
+        2. Deleted Table
+            -   This table stores copies of the affected rows during DELETE and UPDATE statements. 
+                During the execution of these statements rows are deleted from the trigger table and stored into
+                the deleted table.
+
+    Syntax:
+    --------
+        CREATE TRIGGER trigger_name
+        ON { table | view }
+        [WITH DML_trigger_option]
+        { FOR | AFTER | INSTEAD OF }
+        { [INSERT], [UPDATE], [DELETE] }
+        As
+        BEGIN
+            { SQL Statement or block }
+        END
+
+
+    Example: Create trigger when new employee added to employee table.
+    ---------
+    
+        CREATE TRIGGER greet_emp
+        on dbo.employees
+        AFTER INSERT
+        AS
+        BEGIN
+            PRINT 'New Employee added';
+        END
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+#1. DML Triggers
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+    
